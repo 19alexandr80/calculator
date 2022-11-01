@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	    <meta charset="utf-8">
+		<title>DOM Калькулятор</title>
+		<link href="calk2soloworkstile.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+	<center>
+        <!--<header class="telo">	
+	        <img src="kartinka/1AF4TR1v.jpg" alt="картинка html" />
+            <h1>Основы Web-технологий</h1>
+		    <nav class="drop_menu" >
+		        <ul>
+			        <li><a href="hendwork.html" target="_blank">Главная</a></li>
+				    <li><a href="Webtexnologi.html" target="_blank">Web-технологии</a>
+					    <ul>
+						    <li><a href="HTML5.html" target="_blank">HTML5</a></li>
+							<li><a href="CSS3.html" target="_blank">CSS3</a></li>
+							<li><a href="JavaScript.html" target="_blank">JavaScript</a></li>
+						</ul>
+					</li>
+				    <li><a href="kalkulator.html" target="_blank">Калькулятор</a></li>
+				    <li><a href="test.html" target="_blank">Тест</a></li>
+			    </ul>	
+		    </nav>
+		</header>-->
+		<div class="telo" id="schetu" >
+		    <table id="kalkulator" >
+		        <tr>
+    	            <td colspan="5" ><input type="text" name="t" id="info" size="32px" value = "0"
+					    style="border: solid 1px #C3C3C3;
+	                           border-radius: 3px;
+							   height: 23px; "/></td>
+		        </tr>
+				<tr>
+	                <td><button type="button" value="qwtup">x<sup>2</sup></button></td>
+			        <td><button type="button" value="xy">x<sup>y</sup></button></td>
+			        <td><button type="button" value="pers">%</button></td>
+	                <td><button type="button" value="sqrt">&#8730;</button></td>
+		            <td><button type="button" value="chast"><sup>1</sup>/<sub>x</sub></button></td>
+	            </tr>
+                <tr>
+	                <td><button type="button" value="7">7</button></td>
+			        <td><button type="button" value="8">8</button></td>
+			        <td><button type="button" value="9">9</button></td>
+	                <td><button type="button" value="/">/</button></td>
+		            <td><button type="button" value="clear">c</button></td>
+	            </tr>
+	            <tr>
+		            <td><button type="button" value="4">4</button></td>
+			        <td><button type="button" value="5">5</button></td>
+			        <td><button type="button" value="6">6</button></td>
+	                <td><button type="button" value="*">*</button></td>
+		            <td><button type="button" value="inv">&#177;</button></td>
+	            </tr>
+	            <tr>
+		            <td><button type="button" value="1">1</button></td>
+			        <td><button type="button" value="2">2</button></td>
+			        <td><button type="button" value="3">3</button></td>
+		            <td><button type="button" value="-">-</button></td>
+		            <td rowspan="2"><button type="button" value="=" >=</button></td>
+		        </tr>
+		        <tr>
+		            <td colspan="2"><button type="button" value="0" >0</button></td>
+		            <td><button type="button" value=".">.</button></td>
+		            <td><button type="button" value="+">+</button></td>
+    	        </tr>
+	        </table>
+			<script>
+			    let tablo = document.querySelectorAll('input')[0];
+				let i = 0;
+				let num = {
+					a: '',
+					b: '',
+					op: '',
+					}
+				let methods = {
+                    "-": (a, b) => a - b,
+                    "+": (a, b) => +a + +b,
+			        "*": (a, b) => a * b,
+					"/": (a, b) => a / b,
+					"xy": (a, b) => Math.pow(a, b),
+					"pers": (a,b) => b / 100 * a,
+					"qwtup": (a) => a * a,
+					"sqrt": (a) => Math.sqrt(a),
+					"chast": (a) => 1 / a,
+				}
+				let sobitie = document.querySelectorAll('button');
+				for (let elem of sobitie) {
+                        elem.addEventListener('click', hi); 
+                }
+				//kalkulator.addEventListener('click', hi);
+				function hi(e) {
+				    //let clikc = e.target;
+                    //if (clikc.tagName != 'BUTTON') return;
+					let clikc = this;
+					//console.log(e.clientY, e.clientX);
+					//console.log(e);
+					//console.log(this);
+					if (clikc.value == 'clear') {
+					    num = {
+					        a: '',
+					        b: '',
+						    op: '',
+						}
+						i = 0;
+                        tablo.value = 0;
+                        return;							
+		   		    }
+					if (isFinite(clikc.value) || clikc.value == '.' || clikc.value == 'inv') {
+					    if (num.op != '' && i == 0) {
+						    if (clikc.value == '.' && num.b == '') {
+						        num.b = '0.';
+								tablo.value = num.b;
+								return;
+							}
+							if (/[.]/.test(num.b) && clikc.value == '.') return;
+						    (clikc.value == 'inv')? num.b = -num.b : num.b += clikc.value;
+							tablo.value = num.b;
+							return;
+						}
+						if (clikc.value == '.' && tablo.value == 0) {
+						    num.a = '0.';
+							tablo.value = num.a;
+							return;
+						}
+						if (/[.]/.test(num.a) && clikc.value == '.') return;
+						(clikc.value == 'inv')? num.a = -num.a : num.a += clikc.value;
+						tablo.value = num.a;
+					}else{
+					    if (clikc.value == 'qwtup' || clikc.value == 'sqrt' || clikc.value == 'chast') {
+							num.op = clikc.value;
+							num.a = methods[num.op](num.a);
+							if (num.a == "Infinity") {
+							    tablo.value = "БЕСКОНЕЧНОСТЬ";
+								num = {
+					                a: '',
+					                b: '',
+						            op: '',
+						        }
+							    return;
+							}
+							num.a = +num.a.toFixed(4);
+							tablo.value = num.a;
+							num.b = "";
+							num.op = "";
+							return;
+						}
+						if (clikc.value == '=') {
+							i++;
+						    num.a = methods[num.op](num.a, num.b);
+							if (num.a == "Infinity") {
+							    tablo.value = "БЕСКОНЕЧНОСТЬ";
+								num = {
+					                a: '',
+					                b: '',
+						            op: '',
+						        }
+						        i = 0;
+							    return;
+							}
+							num.a = +num.a.toFixed(4);
+							tablo.value = num.a;
+						    return;
+						}
+						if (num.op != '') {
+							if (i == 0) num.a = methods[num.op](num.a, num.b);
+							num.a = +num.a.toFixed(4);
+							tablo.value = num.a;
+							i = 0;
+					    }
+						num.op = clikc.value;
+						num.b = '';
+					}
+                }
+			</script>
+	    </div>
+		<footer class="telo" style="text-align:center; font-family: none;" >
+		    <address>
+			    <a href="mailto:usanka1980@gmail.com" target="blank">Пишите: usanka1980@gmail.com</a>
+		    </address>
+			    &#169;Покатаев А. С. 2019г.
+		</footer>
+	</center>
+	</body>
+</html>	
